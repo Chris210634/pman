@@ -46,8 +46,8 @@ class OpenShiftManager(object):
                 "name": name
             },
             "spec": {
-                "parallelism": 1,
-                "completions": 1,
+                "parallelism": 4,
+                "completions": 4,
                 "activeDeadlineSeconds": 3600,
                 "template": {
                     "metadata": {
@@ -57,16 +57,22 @@ class OpenShiftManager(object):
                         "restartPolicy": "Never",
                         "containers": [
                             {
+                                "env": [
+                                    {
+                                        "name": "NUMBER_OF_WORKERS",
+                                        "value": "4"
+                                    }
+                                ],
                                 "name": name,
                                 "image": image,
                                 "command": command.split(" "),
                                 "resources": {
                                     "limits": {
-                                        "memory": "1024Mi",
+                                        "memory": "3Gi",
                                         "cpu": "2000m"
                                     },
                                     "requests": {
-                                        "memory": "128Mi",
+                                        "memory": "3Gi",
                                         "cpu": "250m"
                                     }
                                 },
