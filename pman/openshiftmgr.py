@@ -35,7 +35,7 @@ class OpenShiftManager(object):
         self.kube_client = k_client.CoreV1Api()
         self.kube_v1_batch_client = k_client.BatchV1Api()
 
-    def schedule(self, image, command, name):
+    def schedule(self, image, command, name, number_of_workers, cpu_limit, memory_limit)
         """
         Schedule a new job and returns the job object.
         """
@@ -46,8 +46,8 @@ class OpenShiftManager(object):
                 "name": name
             },
             "spec": {
-                "parallelism": 1,
-                "completions": 1,
+                "parallelism": number_of_workers,
+                "completions": number_of_workers,
                 "activeDeadlineSeconds": 3600,
                 "template": {
                     "metadata": {
@@ -57,17 +57,27 @@ class OpenShiftManager(object):
                         "restartPolicy": "Never",
                         "containers": [
                             {
+                                "env": [
+                                    {
+                                        "name": "NUMBER_OF_WORKERS",
+                                        "value": "4"
+                                    },
+                                    {
+                                        "name": "CPU_LIMIT",
+                                        "value": cpu_limit
+                                    }
+                                ],
                                 "name": name,
                                 "image": image,
                                 "command": command.split(" "),
                                 "resources": {
                                     "limits": {
-                                        "memory": "1024Mi",
-                                        "cpu": "2000m"
+                                        "memory": memory_limit,
+                                        "cpu": cpu_limit
                                     },
                                     "requests": {
-                                        "memory": "128Mi",
-                                        "cpu": "250m"
+                                        "memory": memory_limit,
+                                        "cpu": cpu_limit
                                     }
                                 },
                                 "volumeMounts": [
@@ -100,12 +110,12 @@ class OpenShiftManager(object):
                     ],
                     "resources": {
                         "limits": {
-                            "memory": "1024Mi",
-                            "cpu": "2000m"
+                            "memory": memory_limit,
+                            "cpu": cpu_limit
                         },
                         "requests": {
-                            "memory": "128Mi",
-                            "cpu": "250m"
+                            "memory": memory_limit,
+                            "cpu": cpu_limit
                         }
                     },
                     "volumeMounts": [
@@ -137,12 +147,12 @@ class OpenShiftManager(object):
                 ],
                 "resources": {
                     "limits": {
-                        "memory": "1024Mi",
-                        "cpu": "2000m"
+                        "memory": memory_limit,
+                        "cpu": cpu_limit
                     },
                     "requests": {
-                        "memory": "128Mi",
-                        "cpu": "250m"
+                        "memory": memory_limit,
+                        "cpu": cpu_limit
                     }
                 },
                 "volumeMounts": [
