@@ -35,7 +35,7 @@ class OpenShiftManager(object):
         self.kube_client = k_client.CoreV1Api()
         self.kube_v1_batch_client = k_client.BatchV1Api()
 
-    def schedule(self, image, command, name, number_of_workers, cpu_limit, memory_limit)
+    def schedule(self, image, command, name, number_of_workers, cpu_limit, memory_limit):
         """
         Schedule a new job and returns the job object.
         """
